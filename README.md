@@ -24,8 +24,7 @@ the questions of the **Marketing** team (customer acquisition and retention).
 12. [Portability](#portability)
 13. [Assumptions and limitations](#assumptions-and-limitations)
 14. [Challenges](#challenges)
-15. [Coverage of the assignment requirements](#coverage-of-the-assignment-requirements)
-16. [Team and responsibilities](#team-and-responsibilities)
+15. [Team and responsibilities](#team-and-responsibilities)
 
 ---
 
@@ -211,8 +210,6 @@ erDiagram
 The diagram shows keys and the main attributes only. The full column lists are in the `ddl` of each table
 in `02_silver.py`.
 
-Screenshot for the presentation: Catalog Explorer > silver schema > any table > "View relationships"
-draws the ER diagram from the declared constraints. Save it as `docs/silver_er.png`.
 
 Design notes on 3NF: `orders.total_price` is derived from the line items in the source data model, and
 `part.brand` implies `part.manufacturer` (`Brand#MN` belongs to `Manufacturer#M`). We kept both because
@@ -343,11 +340,6 @@ How the Marketing validation rules from the brief map to the rules above:
 * Every order has a valid customer reference: M2 plus the `fk_customer` row rule in silver.
 * Customers with no orders survive into silver and appear in gold as zero-activity: M3.
 
-### Demo for the presentation
-
-Run `04_validation` (all rules green), then show the latest rows of `ops.validation_results`. To show
-that the rules really catch problems, insert a bad row into a copy of bronze and re-run silver: the row
-lands in `ops.quarantine_<table>` with the failed rule name.
 
 ## Monitoring and alerting
 
@@ -380,18 +372,49 @@ Thresholds are constants in `config.py` (`ALERT_ACTIVATION_DROP_PP`, `ALERT_NEW_
 
 ## Business questions and answers
 
-All answers are computed from the gold layer in `05_business_questions.py`. Fill in the table after
-running the notebook.
+
+All answers are computed from the gold layer in `05_business_questions.py` (data as of 1998-08-02).
 
 | # | Question | Answer |
-|---|---|---|
-| Q1 | Activation rate for the BUILDING segment | `__ %` |
-| Q2 | New customers (by first order date) in 1996-Q1 | `__` |
-| Q3 | Segment with the highest repeat purchase rate | `__` (`__ %`) |
-| Q4 | Share of customers in each 1996 cohort who ordered again within 3 months | `__` |
+| --- | --- | --- |
+| Q1 | Activation rate for the BUILDING segment | **66.71 %** (100,270 of 150,297 customers) |
+| Q2 | New customers (by first order date) in 1996-Q1 | **157** (AUTOMOBILE 32, BUILDING 27, FURNITURE 39, HOUSEHOLD 34, MACHINERY 25) |
+| Q3 | Segment with the highest repeat purchase rate | **FURNITURE** (66.83 %) |
+| Q4 | Share of customers in each 1996 cohort who ordered again within 3 months | 11.8 % to 54.5 % depending on the month; **35.1 %** overall (149 of 424 customers) |
+
+**Q3 ranking** (repeat customers / all customers of the segment):
+
+| Rank | Segment | Repeat rate | Repeat rate among activated |
+| --- | --- | --- | --- |
+| 1 | FURNITURE | 66.83 % | 99.98 % |
+| 2 | AUTOMOBILE | 66.79 % | 99.98 % |
+| 3 | BUILDING | 66.70 % | 99.98 % |
+| 4 | MACHINERY | 66.57 % | 99.98 % |
+| 5 | HOUSEHOLD | 66.37 % | 99.99 % |
+
+The gap between the first and last segment is only 0.45 percentage points, so the result is practically a tie.
+
+**Q4 detail** (cohort = month of first order, 3-month window, all windows complete):
+
+| Cohort | Size | Ordered again | Retention |
+| --- | --- | --- | --- |
+| 1996-01 | 54 | 18 | 33.33 % |
+| 1996-02 | 44 | 20 | 45.45 % |
+| 1996-03 | 59 | 24 | 40.68 % |
+| 1996-04 | 63 | 26 | 41.27 % |
+| 1996-05 | 45 | 9 | 20.00 % |
+| 1996-06 | 36 | 13 | 36.11 % |
+| 1996-07 | 21 | 5 | 23.81 % |
+| 1996-08 | 26 | 9 | 34.62 % |
+| 1996-09 | 19 | 7 | 36.84 % |
+| 1996-10 | 22 | 12 | 54.55 % |
+| 1996-11 | 17 | 2 | 11.76 % |
+| 1996-12 | 18 | 4 | 22.22 % |
+
+The cohorts are small (17 to 63 customers), so the monthly rates are noisy. For context, the 1992 cohorts retain 38 to 46 %. The alternative reading (`activity_retention_3m`) is stable: 45.1 to 46.3 % of customers active in each 1996 month ordered again within 3 months.
 
 | # | Source table | Query logic | Suggested chart |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Q1 | `gold.segment_summary` | `activation_rate` for `market_segment = 'BUILDING'`, shown next to the other segments | bar by segment |
 | Q2 | `gold.segment_kpi_monthly` | sum of `new_customers` where `quarter = '1996-Q1'`; the full quarterly history is shown to explain the value | line by quarter |
 | Q3 | `gold.segment_summary` | segments ranked by `repeat_rate`; `repeat_rate_among_active` is shown as a second view | bar by segment |
@@ -399,14 +422,8 @@ running the notebook.
 
 Notes for interpreting the answers:
 
-* In TPC-H, orders are spread evenly over 1992-1998 and customers place many of them, so almost every
-  customer has a first order in 1992-1993. New customers in 1996-Q1 and 1996 first-order cohorts are
-  therefore expected to be zero or close to zero. This is a property of the data, not a pipeline error. The
-  notebook shows all cohorts to make this visible, and `activity_retention_3m` still answers the underlying
-  business question ("do customers who bought in 1996 come back?").
-* About a third of customers never order (by design of the generator), so activation and repeat rates
-  computed over all customers are far from 100%, and differences between segments are small. We report the
-  repeat rate among activated customers as well, so the comparison is not dominated by the denominator.
+* In TPC-H, orders are spread evenly over 1992-1998 and customers place many of them, so almost every customer has a first order in 1992-1993. New customers in 1996-Q1 and the 1996 first-order cohorts are therefore small: 157 new customers in 1996-Q1 (against 211,487 in 1992-Q1) and 424 in the whole of 1996. This is a property of the data, not a pipeline error. The notebook shows all cohorts to make this visible, and `activity_retention_3m` still answers the underlying business question ("do customers who bought in 1996 come back?").
+* About a third of customers never order (by design of the generator), so activation and repeat rates computed over all customers are far from 100%, and differences between segments are small. We report the repeat rate among activated customers as well, so the comparison is not dominated by the denominator.
 
 ## Dashboard
 
@@ -469,23 +486,7 @@ creating the dashboard in another workspace or environment.
   period-over-period alert would fire constantly; the minimum-base guard and the complete-quarter rule
   address this.
 
-## Coverage of the assignment requirements
 
-| Requirement | Where |
-|---|---|
-| Bronze: data as is, metadata only if needed | `01_bronze.py`, three technical columns only |
-| Silver: 3NF with enforced data quality | `02_silver.py`: row rules, quarantine, NOT NULL and CHECK, PK/FK |
-| Gold: designed for the chosen profile's questions | `03_gold.py`, five Marketing tables |
-| Public repository, uv, code, README | `pyproject.toml`, `uv.lock`, this file |
-| Presentation or link in README | `docs/presentation_outline.md`; link at the top of this file |
-| Portable scripts, pre-production assumption | parameters `catalog`, `env`, `source`; [Portability](#portability) |
-| Databricks notebooks and Jobs | `notebooks/`, `databricks.yml` |
-| Team responsibilities | [Team and responsibilities](#team-and-responsibilities) |
-| ER diagram of silver tables | diagram above and the Catalog Explorer screenshot |
-| Answers with code and visualisation | `05_business_questions.py`, `sql/dashboard_queries.sql` |
-| Validation rules (segment, order-customer reference, zero-order customers) | `04_validation.py`, rules M1-M3 |
-| Monitoring and optional alerting | `06_monitoring.py`, `sql/alerts/` |
-| Demo including how validation was decided | validation notebook, profiling cells, alert demo |
 
 ## Team and responsibilities
 
