@@ -5,7 +5,7 @@ bronze / silver / gold Lakehouse on Databricks, build the pipeline that populate
 the questions of the **Marketing** team (customer acquisition and retention).
 
 - Presentation: `https://www.canva.com/design/DAHXUZlEnk4/0hiDveUR5vmr_z5cwYpcgQ/edit?ui=eyJBIjp7fX0`
-- Dashboard: `<PASTE LINK or add a screenshot to docs/>`
+- Dashboard: `https://dbc-58a977cc-a9a9.cloud.databricks.com/dashboardsv3/01f1c259d3b011c8b0ca7c8b4592abac/published?autoLogin=true&email=yablunovska.pn%40ucu.edu.ua&o=7474650486058939`
 - Team: see [Team and responsibilities](#team-and-responsibilities)
 
 ## Table of contents
