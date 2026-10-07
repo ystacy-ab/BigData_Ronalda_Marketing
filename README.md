@@ -4,8 +4,8 @@ Group Assignment 1. We migrate the TPC-H wholesale-supplier data (`samples.tpch`
 bronze / silver / gold Lakehouse on Databricks, build the pipeline that populates the layers, and answer
 the questions of the **Marketing** team (customer acquisition and retention).
 
-- Presentation: `https://www.canva.com/design/DAHXUZlEnk4/0hiDveUR5vmr_z5cwYpcgQ/edit?ui=eyJBIjp7fX0`
-- Dashboard: `[https://dbc-58a977cc-a9a9.cloud.databricks.com/dashboardsv3/01f1c259d3b011c8b0ca7c8b4592abac/published?autoLogin=true&email=yablunovska.pn%40ucu.edu.ua&o=7474650486058939](https://dbc-58a977cc-a9a9.cloud.databricks.com/dashboardsv3/01f1c259d3b011c8b0ca7c8b4592abac/published?o=7474650486058939&f_0afe6b9c%7Edata-quality-status-last-run=%7B%22columns%22%3A%5B%22columns_0%22%2C%22columns_1%22%2C%22columns_2%22%2C%22columns_3%22%2C%22columns_4%22%2C%22columns_5%22%5D%2C%22rows%22%3A%5B%5B%22L1_part%22%2C%22bronze%22%2C%22part%3A+bronze+rows+%3D+source+rows%22%2C%221000000%22%2C%22%3D%3D+1000000%22%2C%22true%22%5D%5D%7D)`
+- [Presentation](https://www.canva.com/design/DAHXUZlEnk4/0hiDveUR5vmr_z5cwYpcgQ/edit?ui=eyJBIjp7fX0)
+- [Dashboard](https://dbc-58a977cc-a9a9.cloud.databricks.com/dashboardsv3/01f1c259d3b011c8b0ca7c8b4592abac/published?o=7474650486058939&f_0afe6b9c%7Edata-quality-status-last-run=%7B%22columns%22%3A%5B%22columns_0%22%2C%22columns_1%22%2C%22columns_2%22%2C%22columns_3%22%2C%22columns_4%22%2C%22columns_5%22%5D%2C%22rows%22%3A%5B%5B%22L1_part%22%2C%22bronze%22%2C%22part%3A+bronze+rows+%3D+source+rows%22%2C%221000000%22%2C%22%3D%3D+1000000%22%2C%22true%22%5D%5D%7D)
 - Team: see [Team and responsibilities](#team-and-responsibilities)
 
 ## Table of contents
