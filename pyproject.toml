@@ -1,0 +1,29 @@
+[project]
+name = "tpch-marketing-lakehouse"
+version = "0.1.0"
+description = "TPC-H -> Databricks Lakehouse (bronze/silver/gold) for the Marketing team"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+    "databricks-sdk>=0.30",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 110
+builtins = ["spark", "dbutils", "display", "displayHTML"]
+
+[tool.ruff.lint]
+select = ["E", "F", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# Databricks notebooks: names come from `%run ./00_config`
+"notebooks/*" = ["F403", "F405", "F821", "E402", "E501"]
