@@ -4,7 +4,7 @@ Group Assignment 1. We migrate the TPC-H wholesale-supplier data (`samples.tpch`
 bronze / silver / gold Lakehouse on Databricks, build the pipeline that populates the layers, and answer
 the questions of the **Marketing** team (customer acquisition and retention).
 
-- Presentation: `<PASTE LINK>`
+- Presentation: `https://www.canva.com/design/DAHXUZlEnk4/0hiDveUR5vmr_z5cwYpcgQ/edit?ui=eyJBIjp7fX0`
 - Dashboard: `<PASTE LINK or add a screenshot to docs/>`
 - Team: see [Team and responsibilities](#team-and-responsibilities)
 
